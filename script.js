@@ -1,17 +1,16 @@
-const pergunta = document.getElementById("pergunta");
-const respostaIa = document.getElementById("respostaIa");
+const question = document.getElementById("question");
+const responseIA = document.getElementById("response-IA");
 
-pergunta.addEventListener("keypress", (e) => {
-    if (pergunta.value && e.key === "Enter") {
-        EnviarPergunta();
+question.addEventListener("keypress", (e) => {
+    if (question.value && e.key === "Enter") {
+        sendQuestion();
     }
 });
 
-// Chave da API
-const OPENAI_API_KEY = "";
+const OPENAI_API_KEY = ""; // Your API key
 
-function EnviarPergunta() {
-    let enviarP = pergunta.value;
+function sendQuestion() {
+    let sendQ = question.value;
 
     fetch("https://api.openai.com/v1/completions", {
         method: "POST",
@@ -23,41 +22,41 @@ function EnviarPergunta() {
 
         body: JSON.stringify({
             model: "text-davinci-003",
-            prompt: enviarP,
+            prompt: sendQ,
             max_tokens: 2048,
             temperature: 0.5,
         }),
     })
         .then((response) => response.json())
         .then((json) => {
-            if (respostaIa.value) {
-                respostaIa.value += "\n";
+            if (responseIA.value) {
+                responseIA.value += "\n";
             }
 
             if (json.error?.message) {
-                respostaIa.value += `Error: ${json.error.message}`;
+                responseIA.value += `Error: ${json.error.message}`;
             } else if (json.choices?.[0].text) {
-                let text = json.choices[0].text || "Sem resposta";
+                let text = json.choices[0].text || "No reply";
 
-                respostaIa.value += "Chat GPT: " + text;
+                responseIA.value += "ChatGPT: " + text;
             }
 
-            respostaIa, scrollTop = respostaIa.scrollHeight;
+            responseIA, scrollTop = responseIA.scrollHeight;
         })
         .catch((error) => console.error("Error:", error))
         .finally(() => {
-            pergunta.value = "";
-            pergunta.disabled = false;
-            pergunta.focus();
+            question.value = "";
+            question.disabled = false;
+            question.focus();
         });
 
-    if (respostaIa.value) {
-        respostaIa.value += "\n\n\n";
+    if (responseIA.value) {
+        responseIA.value += "\n\n\n";
 
-        respostaIa.value += `Eu: ${enviarP}\n`;
-        pergunta.value = "Aguardando sua resposta...";
-        pergunta.disabled = true;
+        responseIA.value += `I: ${sendQ}\n`;
+        question.value = "Waiting your answer...";
+        question.disabled = true;
 
-        respostaIa.scrollTop = respostaIa.scrollHeight;
+        responseIA.scrollTop = responseIA.scrollHeight;
     }
 }

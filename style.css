@@ -15,7 +15,7 @@
     gap: 10px;
 }
 
-#respostaIa {
+#response-IA {
     font-size: 15px;
     width: 50%;
     min-height: 60vh;
@@ -25,7 +25,7 @@
     background-color: transparent;
 }
 
-#pergunta {
+#question {
     font-size: 15px;
     width: 50%;
     min-height: 15vh;
